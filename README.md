@@ -3,3 +3,4 @@ Some useful base classes and interfaces, mainly used with the Message Brokers. A
 
 ## References
 - [eShop](https://github.com/dotnet/eShop/tree/main/src/EventBus)
+- [SuperSafeBank](https://github.com/mizrael/SuperSafeBank)
