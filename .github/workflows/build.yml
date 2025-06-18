@@ -1,0 +1,29 @@
+name: Build and Test
+on:
+  workflow_dispatch:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+          dotnet-version: '8.0.x'
+    - name: Install dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+      
+      # See https://josh-ops.com/posts/github-code-coverage/
+      # Add coverlet.collector nuget package to test project - 'dotnet add <TestProject.cspoj> package coverlet
+    - name: Test
+      run: dotnet test --no-restore --verbosity normal --collect:"XPlat Code Coverage" --logger trx --results-directory coverage
+      
