@@ -14,6 +14,13 @@ public interface IEventConsumer
     Task StartConsumeAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Subscribe for a topic
+    /// </summary>
+    /// <param name="topicName"></param>
+    /// <returns></returns>
+    Task<bool> Subscribe(string topicName);
+
+    /// <summary>
     /// Event raised when an integration event is received.
     /// </summary>
     event EventReceivedHandler EventReceived;
