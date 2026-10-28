@@ -11,6 +11,7 @@ Some useful base classes and interfaces, mainly used with the Message Brokers. A
 | `IntegrationEvent` | Base record for events that cross service boundaries (`Id`, `CreationDate`, the wire `EventName` and an overridable `GetPartitionKey()`). |
 | `IntegrationEventNameAttribute` | Gives an event a stable, versioned name so producer and consumer don't share a .NET type. |
 | `IEventProducer` | Publishes an integration event. |
+| `IIntegrationEventOutbox` | Stores an event with the business transaction, to be published afterwards (transactional outbox). |
 | `IIntegrationEventHandler<TEvent>` | Handles one event type on the consuming side (resolved from DI by the transport). |
 | `IEventConsumer` | Low-level, event-based consumer (kept for compatibility; prefer typed handlers). |
 
