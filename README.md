@@ -8,7 +8,7 @@ Some useful base classes and interfaces, mainly used with the Message Brokers. A
 
 | Type | Purpose |
 |---|---|
-| `IntegrationEvent` | Base record for events that cross service boundaries (`Id`, `CreationDate`, plus the wire `EventName` and `PartitionKey`). |
+| `IntegrationEvent` | Base record for events that cross service boundaries (`Id`, `CreationDate`, the wire `EventName` and an overridable `GetPartitionKey()`). |
 | `IntegrationEventNameAttribute` | Gives an event a stable, versioned name so producer and consumer don't share a .NET type. |
 | `IEventProducer` | Publishes an integration event. |
 | `IIntegrationEventHandler<TEvent>` | Handles one event type on the consuming side (resolved from DI by the transport). |
@@ -24,7 +24,7 @@ Define the contract once per service. The two classes can live in different asse
 public sealed record CustomerCreatedEvent(Guid CustomerId, string FirstName, string LastName) : IntegrationEvent
 {
     // Keep all events of one customer in order (same Kafka partition).
-    public override Guid PartitionKey => CustomerId;
+    public override Guid GetPartitionKey() => CustomerId;
 }
 
 await producer.PublishAsync(new CustomerCreatedEvent(id, "Ada", "Lovelace"), cancellationToken);

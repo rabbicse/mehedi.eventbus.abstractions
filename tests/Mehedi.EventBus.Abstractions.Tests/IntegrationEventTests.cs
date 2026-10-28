@@ -9,7 +9,7 @@ public class IntegrationEventTests
     [IntegrationEventName("sales.order-placed.v1")]
     private sealed record NamedEvent(Guid OrderId) : IntegrationEvent
     {
-        public override Guid PartitionKey => OrderId;
+        public override Guid GetPartitionKey() => OrderId;
     }
 
     [Fact]
@@ -31,7 +31,7 @@ public class IntegrationEventTests
     {
         var @event = new PlainEvent();
 
-        Assert.Equal(@event.Id, @event.PartitionKey);
+        Assert.Equal(@event.Id, @event.GetPartitionKey());
     }
 
     [Fact]
@@ -39,17 +39,17 @@ public class IntegrationEventTests
     {
         var orderId = Guid.NewGuid();
 
-        Assert.Equal(orderId, new NamedEvent(orderId).PartitionKey);
+        Assert.Equal(orderId, new NamedEvent(orderId).GetPartitionKey());
     }
 
     [Fact]
-    public void Name_and_partition_key_are_not_part_of_the_payload()
+    public void The_name_is_not_part_of_the_payload()
     {
         var json = JsonSerializer.Serialize(new NamedEvent(Guid.NewGuid()));
 
         Assert.DoesNotContain(nameof(IntegrationEvent.EventName), json, StringComparison.Ordinal);
-        Assert.DoesNotContain(nameof(IntegrationEvent.PartitionKey), json, StringComparison.Ordinal);
-        Assert.Contains(nameof(IntegrationEvent.Id), json, StringComparison.Ordinal);
+        Assert.Contains("\"OrderId\"", json, StringComparison.Ordinal);
+        Assert.Contains("\"Id\"", json, StringComparison.Ordinal);
     }
 
     [Fact]

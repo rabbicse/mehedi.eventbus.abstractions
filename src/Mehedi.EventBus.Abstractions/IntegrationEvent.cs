@@ -29,12 +29,13 @@ public record IntegrationEvent
     /// when present, otherwise from the class name. It is not part of the JSON payload.
     /// </remarks>
     [JsonIgnore]
-    public virtual string EventName => IntegrationEventName.Of(GetType());
+    public string EventName => IntegrationEventName.Of(GetType());
 
     /// <summary>
-    /// Gets the key that decides the event's partition. Events with the same key are delivered in order.
-    /// Defaults to <see cref="Id"/> (no ordering); override it with the aggregate id to keep an aggregate's events in order.
+    /// Returns the key that decides the event's partition. Events with the same key are delivered in order.
+    /// Defaults to <see cref="Id"/> (no ordering); override it to return the aggregate id and keep an
+    /// aggregate's events in order.
     /// </summary>
-    [JsonIgnore]
-    public virtual Guid PartitionKey => Id;
+    /// <remarks>A method rather than a property, so overriding it can never add it to the JSON payload.</remarks>
+    public virtual Guid GetPartitionKey() => Id;
 }
